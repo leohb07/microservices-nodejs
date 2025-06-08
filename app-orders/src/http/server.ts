@@ -1,5 +1,8 @@
+import "@opentelemetry/auto-instrumentations-node/register";
+
 import { fastify } from "fastify";
 import { fastifyCors } from "@fastify/cors";
+import { trace } from "@opentelemetry/api";
 import { z } from "zod";
 import {
   serializerCompiler,
@@ -43,6 +46,7 @@ app.post(
       customerId,
       amount,
     });
+    trace.getActiveSpan()?.setAttribute("order_id", orderId);
     dispatchOrderCreated({
       orderId,
       amount,
